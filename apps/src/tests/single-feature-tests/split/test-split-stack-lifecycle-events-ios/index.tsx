@@ -11,14 +11,14 @@ import { SafeAreaView } from 'react-native-screens/experimental';
 
 type Log = (message: string) => void;
 
-const appearanceEvents = (name: string, log: Log) => ({
+const lifecycleEvents = (name: string, log: Log) => ({
   onWillAppear: () => log(`${name} willAppear`),
   onDidAppear: () => log(`${name} didAppear`),
   onWillDisappear: () => log(`${name} willDisappear`),
   onDidDisappear: () => log(`${name} didDisappear`),
 });
 
-function TestSplitStackAppearanceEvents() {
+function TestSplitStackLifecycleEvents() {
   const hostRef = React.useRef<SplitHostCommands>(null);
   const [events, setEvents] = React.useState<string[]>([]);
   const log = React.useCallback<Log>(message => {
@@ -27,7 +27,7 @@ function TestSplitStackAppearanceEvents() {
 
   return (
     <Split.Host ref={hostRef} preferredDisplayMode="oneBesideSecondary">
-      <Split.Column {...appearanceEvents('Primary SplitColumn', log)}>
+      <Split.Column {...lifecycleEvents('Primary SplitColumn', log)}>
         <StackContainer
           routeConfigs={[
             {
@@ -39,7 +39,7 @@ function TestSplitStackAppearanceEvents() {
                 />
               ),
               options: {
-                ...appearanceEvents('Primary StackHost root', log),
+                ...lifecycleEvents('Primary StackHost root', log),
                 headerConfig: { title: 'Primary StackHost root' },
               },
             },
@@ -47,34 +47,39 @@ function TestSplitStackAppearanceEvents() {
               name: 'Primary StackHost pushed',
               element: <Screen title="Primary StackHost pushed" />,
               options: {
-                ...appearanceEvents('Primary StackHost pushed', log),
+                ...lifecycleEvents('Primary StackHost pushed', log),
                 headerConfig: { title: 'Primary StackHost pushed' },
               },
             },
           ]}
         />
       </Split.Column>
-      <Split.Column {...appearanceEvents('Secondary SplitColumn', log)}>
-        <SafeAreaView edges={{ left: true }} style={styles.secondary}>
-          <Button
-            title="Hide primary"
-            onPress={() => hostRef.current?.hide('primary')}
-          />
-          <Button
-            title="Show primary"
-            onPress={() => hostRef.current?.show('primary')}
-          />
-          <Button title="Clear log" onPress={() => setEvents([])} />
-          <ScrollView
-            style={styles.log}
-            contentContainerStyle={styles.logContent}>
-            {events.map((event, index) => (
-              <Text key={index} style={styles.logLine}>
-                {event}
-              </Text>
-            ))}
-          </ScrollView>
-        </SafeAreaView>
+      <Split.Column {...lifecycleEvents('Secondary SplitColumn', log)}>
+        <View style={styles.secondary}>
+          {/* The top edge keeps the buttons below the navigation bar of the column, which takes the touches. */}
+          <SafeAreaView
+            edges={{ top: true, left: true }}
+            style={styles.secondaryContent}>
+            <Button
+              title="Hide primary"
+              onPress={() => hostRef.current?.hide('primary')}
+            />
+            <Button
+              title="Show primary"
+              onPress={() => hostRef.current?.show('primary')}
+            />
+            <Button title="Clear log" onPress={() => setEvents([])} />
+            <ScrollView
+              style={styles.log}
+              contentContainerStyle={styles.logContent}>
+              {events.map((event, index) => (
+                <Text key={index} style={styles.logLine}>
+                  {event}
+                </Text>
+              ))}
+            </ScrollView>
+          </SafeAreaView>
+        </View>
       </Split.Column>
     </Split.Host>
   );
@@ -102,10 +107,13 @@ const styles = StyleSheet.create({
   },
   secondary: {
     flex: 1,
+    backgroundColor: Colors.GreenLight100,
+  },
+  secondaryContent: {
+    flex: 1,
     alignItems: 'center',
     paddingTop: 12,
     gap: 12,
-    backgroundColor: Colors.GreenLight100,
   },
   title: {
     fontSize: 20,
@@ -128,6 +136,6 @@ const styles = StyleSheet.create({
 });
 
 export default createScenario(
-  TestSplitStackAppearanceEvents,
+  TestSplitStackLifecycleEvents,
   scenarioDescription,
 );

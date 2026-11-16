@@ -2,7 +2,7 @@
 
 ## Details
 
-**Description:** The content of a `Split.Column` is swapped at runtime between a plain view and a `Stack.Host`, and between two different `Stack.Host` instances. A column gets a separate navigation controller for each kind of content, so every swap makes the Split install a new one. The primary column holds the controls and a log of the appearance events of the secondary column.
+**Description:** The content of a `Split.Column` is swapped at runtime between a plain view and a `Stack.Host`, and between two different `Stack.Host` instances. A column gets a separate navigation controller for each kind of content, so every swap makes the Split install a new one. The primary column holds the controls and a log of the lifecycle events of the secondary column.
 
 **OS test creation version:** iPadOS: 27.0
 
@@ -62,8 +62,8 @@ TBD.
     - [ ] After every tap the secondary column shows the selected content.
     - [ ] The display mode button of the secondary column still hides and shows the primary column.
 
-### Appearance events
+### Lifecycle events
 
 1. Look at the log after each swap of the steps above.
 
-    - [ ] Note which appearance events of the secondary column a swap emits. The navigation controller of the column is replaced, so `willAppear` and `didAppear` are expected; a `willDisappear` or `didDisappear` without a matching appear event is a bug.
+    - [ ] Note which lifecycle events of the secondary column a swap emits. The navigation controller of the column is replaced, so `willAppear` and `didAppear` are expected; a `willDisappear` or `didDisappear` without a matching appear event is a bug.
