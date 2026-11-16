@@ -110,7 +110,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     gap: 12,
-    backgroundColor: Colors.White,
   },
   screen: {
     flex: 1,
@@ -135,7 +134,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginBottom: 16,
     borderRadius: 8,
-    backgroundColor: Colors.GreenLight100,
+    backgroundColor: Colors.White,
   },
   logContent: {
     padding: 12,
