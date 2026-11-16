@@ -11,6 +11,7 @@
 #import "RNSLog.h"
 
 #import "RNSContainerHelpers.h"
+#import "RNSConversions-Stack.h"
 #import "RNSStackHeaderConfigComponentView.h"
 #import "RNSStackNavigationController.h"
 #import "RNSStackOperationCoordinator.h"
@@ -25,6 +26,7 @@ namespace react = facebook::react;
   RNSStackNavigationController *_Nonnull _stackNavigationController;
   RNSStackOperationCoordinator *_Nonnull _stackOperationCoordinator;
   NSMutableArray<RNSStackScreenComponentView *> *_Nonnull _renderedScreens;
+  UITraitEnvironmentLayoutDirection _layoutDirection;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -43,6 +45,7 @@ namespace react = facebook::react;
   _stackNavigationController = [RNSStackNavigationController new];
   _stackOperationCoordinator = [RNSStackOperationCoordinator new];
   _renderedScreens = [NSMutableArray new];
+  _layoutDirection = UITraitEnvironmentLayoutDirectionUnspecified;
 }
 
 #pragma mark - UIKit Callbacks
@@ -94,6 +97,20 @@ namespace react = facebook::react;
 }
 
 #pragma mark - RCTComponentViewProtocol
+
+- (void)updateProps:(const react::Props::Shared &)props oldProps:(const react::Props::Shared &)oldProps
+{
+  const auto &oldComponentProps = *std::static_pointer_cast<const react::RNSStackHostProps>(_props);
+  const auto &newComponentProps = *std::static_pointer_cast<const react::RNSStackHostProps>(props);
+
+  if (newComponentProps.layoutDirection != oldComponentProps.layoutDirection) {
+    _layoutDirection = rnscreens::conversion::UITraitEnvironmentLayoutDirectionFromReactRNSStackHostLayoutDirection(
+        newComponentProps.layoutDirection);
+    _stackNavigationController.layoutDirection = _layoutDirection;
+  }
+
+  [super updateProps:props oldProps:oldProps];
+}
 
 - (void)mountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView index:(NSInteger)index
 {

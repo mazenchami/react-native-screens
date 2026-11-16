@@ -84,6 +84,12 @@ internal class StackHostViewManager :
         }
     }
 
+    // iOS only
+    override fun setLayoutDirection(
+        view: StackHost,
+        value: String?,
+    ) = Unit
+
     companion object {
         const val REACT_CLASS = "RNSStackHost"
     }
