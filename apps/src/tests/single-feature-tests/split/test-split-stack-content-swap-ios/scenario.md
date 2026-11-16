@@ -64,6 +64,6 @@ TBD.
 
 ### Lifecycle events
 
-1. Look at the log after each swap of the steps above.
+1. Tap "Clear log", then swap the content once, for example with "Stack A".
 
-    - [ ] Note which lifecycle events of the secondary column a swap emits. The navigation controller of the column is replaced, so `willAppear` and `didAppear` are expected; a `willDisappear` or `didDisappear` without a matching appear event is a bug.
+    - [ ] The log shows `Secondary willAppear` followed by `Secondary didAppear`, and nothing else. The Split installs a new navigation controller for the column on every swap.
